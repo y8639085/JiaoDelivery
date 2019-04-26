@@ -2,7 +2,7 @@ package com.unnc.zy18717.jiaodelivery;
 import android.net.Uri;
 
 public class MyProviderContract {
-    public static final String AUTHORITY = "com.example.ryd.mycontentprovider.MyProvider";
+    public static final String AUTHORITY = "com.unnc.zy18717.jiaodelivery.MyProvider";
 
     public static final Uri USERS_URI = Uri.parse("content://"+AUTHORITY+"/users");
 //    public static final Uri ANIMALS_URI = Uri.parse("content://"+AUTHORITY+"/animals");
