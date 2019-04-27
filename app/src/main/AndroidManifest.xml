@@ -18,6 +18,8 @@
         </activity>
         <activity android:name=".SignUpActivity"></activity>
         <activity android:name=".MainActivity"></activity>
+        <activity android:name=".AllItemsActivity"></activity>
+        <activity android:name=".StatisticsActivity"></activity>
         <provider
             android:authorities="com.unnc.zy18717.jiaodelivery.MyProvider"
             android:multiprocess="true"

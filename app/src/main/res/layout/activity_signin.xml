@@ -39,6 +39,7 @@
         android:layout_marginStart="50dp"
         android:ems="10"
         android:inputType="textPersonName"
+        android:text="admin"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView"
         app:layout_constraintStart_toEndOf="@+id/textView" />
 
@@ -49,6 +50,7 @@
         android:layout_marginStart="50dp"
         android:ems="10"
         android:inputType="textPassword"
+        android:text="admin"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView2"
         app:layout_constraintStart_toEndOf="@+id/textView2" />
 

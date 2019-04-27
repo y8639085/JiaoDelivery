@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/value1"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="id"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/value2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/value2"
+        android:layout_width="133dp"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/value1"
+        app:layout_constraintEnd_toStartOf="@+id/value3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/value1" />
+
+    <TextView
+        android:id="@+id/value3"
+        android:layout_width="143dp"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/value2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/value2" />
+
+
+    <TextView
+        android:id="@+id/value4"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="dis"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toStartOf="@+id/value5"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/value1" />
+
+    <TextView
+        android:id="@+id/value5"
+        android:layout_width="133dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/value4"
+        app:layout_constraintEnd_toStartOf="@+id/value6"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/value4" />
+
+    <TextView
+        android:id="@+id/value6"
+        android:layout_width="143dp"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:textAlignment="center"
+        app:layout_constraintBaseline_toBaselineOf="@+id/value5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/value5" />
+
+
+    <Button
+        android:id="@+id/setPrice"
+        android:layout_width="160dp"
+        android:layout_height="30dp"
+        android:text="set price"
+        android:textSize="7sp"
+        app:layout_constraintEnd_toStartOf="@+id/setStatus"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/value5" />
+
+    <Button
+        android:id="@+id/setStatus"
+        android:layout_width="160dp"
+        android:layout_height="30dp"
+        android:text="set status"
+        android:textSize="7sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/setPrice"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/setPrice" />
+
+</android.support.constraint.ConstraintLayout>

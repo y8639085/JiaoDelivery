@@ -1,25 +1,24 @@
 package com.unnc.zy18717.jiaodelivery;
 
-import android.content.Intent;
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class AllItemsActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
 
     SimpleCursorAdapter dataAdapter;
-    long startTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_allitems);
 
-        queryContentProvider("ABS(`"+MyProviderContract.DISTANCE+"`) LIMIT 3");
+        queryContentProvider(null);
+        initRadio();
     }
 
     public void queryContentProvider(String sortOrder) {
@@ -57,24 +56,28 @@ public class MainActivity extends AppCompatActivity {
         listView.setAdapter(dataAdapter);
     }
 
-    public void viewAll (View view) {
-        Intent intent = new Intent(this, AllItemsActivity.class);
-        startActivity(intent);
+    // initialize all radiobuttons
+    private void initRadio() {
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.radioGroup);
+        RadioButton sortById = (RadioButton) findViewById(R.id.sortById);
+        // set "sortById" as default
+        radioGroup.check(sortById.getId());
+        radioGroup.setOnCheckedChangeListener(this);
     }
 
-    public void statistics (View view) {
-        Intent intent = new Intent(this, StatisticsActivity.class);
-        startActivity(intent);
-    }
-
+    // sort data by click radiobuttons
     @Override
-    public void onBackPressed() {
-        long currentTime = System.currentTimeMillis();
-        if ((currentTime - startTime) >= 1500) {
-            Toast.makeText(MainActivity.this, "Press again to exit", Toast.LENGTH_SHORT).show();
-            startTime = currentTime;
-        } else {
-            finish();
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (group.getCheckedRadioButtonId()){
+            case R.id.sortById:
+                queryContentProvider("_id");
+                break;
+            case R.id.sortByDistance:
+                queryContentProvider("ABS(`"+MyProviderContract.DISTANCE+"`)");
+                break;
+            case R.id.sortByPrice:
+                queryContentProvider("price");
+                break;
         }
     }
 }

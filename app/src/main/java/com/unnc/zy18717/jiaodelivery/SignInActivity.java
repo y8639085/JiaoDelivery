@@ -30,6 +30,7 @@ public class SignInActivity extends AppCompatActivity {
             Toast.makeText(this, "LogIn success", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, "Username or Password wrong, try again", Toast.LENGTH_SHORT).show();
             return;

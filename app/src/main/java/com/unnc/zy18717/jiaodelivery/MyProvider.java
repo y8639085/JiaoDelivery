@@ -20,7 +20,9 @@ public class MyProvider extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(MyProviderContract.AUTHORITY, "users", 1);
         uriMatcher.addURI(MyProviderContract.AUTHORITY, "users/#", 2);
-        uriMatcher.addURI(MyProviderContract.AUTHORITY, "*", 3);
+        uriMatcher.addURI(MyProviderContract.AUTHORITY, "deliveries", 3);
+        uriMatcher.addURI(MyProviderContract.AUTHORITY, "deliveries/#", 4);
+        uriMatcher.addURI(MyProviderContract.AUTHORITY, "*", 5);
     }
 
     // create a new database
@@ -55,6 +57,9 @@ public class MyProvider extends ContentProvider {
             case 1:
                 tableName = "users";
                 break;
+            case 2:
+                tableName = "deliveries";
+                break;
             default:
                 tableName = "users";
                 break;
@@ -84,6 +89,10 @@ public class MyProvider extends ContentProvider {
                 selection = "_ID = " + uri.getLastPathSegment();
             case 1:
                 return db.query("users", projection, selection, selectionArgs, null, null, sortOrder);
+            case 4:
+                selection = "_ID = " + uri.getLastPathSegment();
+            case 3:
+                return db.query("deliveries", projection, selection, selectionArgs, null, null, sortOrder);
             default:
                 return null;
         }
