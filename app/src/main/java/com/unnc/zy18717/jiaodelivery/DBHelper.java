@@ -16,7 +16,7 @@ public class DBHelper extends SQLiteOpenHelper {
     // create a new table to contain users, including 'id', 'username', 'password'
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.d("ae3cw3", "onCreate");
+        Log.d("ae3cw4", "onCreate");
         // TODO Auto-generated method stub
         db.execSQL("CREATE TABLE users (" +
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT ," +
@@ -34,15 +34,15 @@ public class DBHelper extends SQLiteOpenHelper {
                 ");");
 
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('704-1', '706-1', '10km', '$1.0', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('701-1', '703-1', '9km', '$1.2', 'pending');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('701-1', '703-1', '9km', '$1.2', 'delivered');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '8km', '$2.3', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '18km', '$3.3', 'pending');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '18km', '$3.3', 'delivered');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '16km', '$1.6', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '19km', '$4.3', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '22km', '$1.3', 'pending');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '22km', '$1.3', 'delivered');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '23km', '$5.9', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '19km', '$7.4', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '7km', '$9.0', 'pending');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '7km', '$9.0', 'delivered');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '2km', '$1.3', 'pending');");
     }
 

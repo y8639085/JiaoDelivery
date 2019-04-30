@@ -16,10 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" android:label="Sign Up"></activity>
         <activity android:name=".MainActivity"></activity>
-        <activity android:name=".AllItemsActivity"></activity>
-        <activity android:name=".StatisticsActivity"></activity>
+        <activity android:name=".AllItemsActivity" android:label="All Items"></activity>
+        <activity android:name=".StatisticsActivity" android:label="Statistics"></activity>
         <provider
             android:authorities="com.unnc.zy18717.jiaodelivery.MyProvider"
             android:multiprocess="true"

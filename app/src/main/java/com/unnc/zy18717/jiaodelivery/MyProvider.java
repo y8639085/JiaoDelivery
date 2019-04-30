@@ -100,7 +100,26 @@ public class MyProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("not implemented");
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String tableName;
+
+        switch(uriMatcher.match(uri)) {
+            case 1:
+                tableName = "users";
+                return db.update("users", values, selection, selectionArgs);
+            case 3:
+                tableName = "deliveries";
+                return db.update("deliveries", values, selection, selectionArgs);
+            default:
+                tableName = "deliveries";
+        }
+        long id = db.insert(tableName, null, values);
+        Uri nu = ContentUris.withAppendedId(uri, id);
+
+        Log.d("ae3cw4", nu.toString());
+
+        getContext().getContentResolver().notifyChange(nu, null);
+        return 0;
     }
 
     @Override

@@ -1,13 +1,21 @@
 package com.unnc.zy18717.jiaodelivery;
 
+import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,8 +61,42 @@ public class MainActivity extends AppCompatActivity {
                 0);
 
         // put data into listview
-        ListView listView = (ListView) findViewById(R.id.listView);
+        final ListView listView = (ListView) findViewById(R.id.listView);
         listView.setAdapter(dataAdapter);
+
+        listView.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Button setPrice = (Button)findViewById(R.id.setPrice);
+                Button setStatus = (Button)findViewById(R.id.setStatus);
+                final String id1 = String.valueOf(id);
+                setPrice.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Enter price");
+                        final EditText price = (EditText)new EditText(MainActivity.this);
+                        price.setSingleLine(true);
+                        builder.setView(price);
+                        builder.setNegativeButton("Cancel", null);
+                        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                String price1 = price.getText().toString();
+                                ContentValues contentValues = new ContentValues();
+                                contentValues.put(MyProviderContract.PRICE, "$"+price1);
+                                String[] selectionArgs = new String[] {id1};
+                                getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                            }
+                        });
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+                });
+
+
+            }
+        });
     }
 
     public void viewAll (View view) {
