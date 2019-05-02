@@ -6,7 +6,6 @@ public class MyProviderContract {
 
     public static final Uri USERS_URI = Uri.parse("content://"+AUTHORITY+"/users");
     public static final Uri DELIVERIES_URI = Uri.parse("content://"+AUTHORITY+"/deliveries");
-//    public static final Uri FOOD_URI = Uri.parse("content://"+AUTHORITY+"/food");
     public static final Uri ALL_URI = Uri.parse("content://"+AUTHORITY+"/");
 
     public static final String _ID = "_id";

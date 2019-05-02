@@ -24,19 +24,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        TextView textView1;
-        TextView textView2;
-        TextView textView3;
-//        Button setPrice;
-//        Button setStatus;
+        TextView textView1, textView2, textView3;
 
         public MyHolder(View itemView) {
             super(itemView);
             textView1 = itemView.findViewById(R.id.value1);
             textView2 = itemView.findViewById(R.id.value2);
             textView3 = itemView.findViewById(R.id.value3);
-//            setPrice = (Button)itemView.findViewById(R.id.setPrice);
-//            setStatus = (Button)itemView.findViewById(R.id.setStatus);
         }
     }
 
@@ -52,9 +46,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
             holder.textView1.setText(String.valueOf(id));
             String price = cursor.getString(cursor.getColumnIndex("price"));
-            holder.textView2.setText(price);
+            holder.textView2.setText("$" + price);
             String distance = cursor.getString(cursor.getColumnIndex("distance"));
-            holder.textView3.setText(distance);
+            holder.textView3.setText(distance + "km");
         }
     }
 

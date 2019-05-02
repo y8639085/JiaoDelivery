@@ -18,6 +18,10 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
+        queryContentProvider(MyProviderContract._ID);
+    }
+
+    public void queryContentProvider(String sortOrder) {
         String[] projection = new String[]{
                 MyProviderContract._ID,
                 MyProviderContract.DISTANCE,
@@ -26,7 +30,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         String[] selectionArgs = new String[] {"delivered"};
 
-        cursor = getContentResolver().query(MyProviderContract.DELIVERIES_URI, projection, "status=?", selectionArgs, MyProviderContract._ID);
+        cursor = getContentResolver().query(MyProviderContract.DELIVERIES_URI, projection, "status=?", selectionArgs, sortOrder);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         dataAdapter = new RecyclerAdapter(this, cursor);
@@ -40,10 +44,10 @@ public class StatisticsActivity extends AppCompatActivity {
 
         if(cursor.moveToFirst()){
             do {
-                StringBuffer sb1 = new StringBuffer(cursor.getString(cursor.getColumnIndex("price")));
-                price += Double.parseDouble(sb1.deleteCharAt(0).toString());
-                StringBuffer sb2 = new StringBuffer(cursor.getString(cursor.getColumnIndex("distance")));
-                distance += Double.parseDouble(sb2.delete(sb2.length()-2, sb2.length()).toString());
+                price += cursor.getDouble(cursor.getColumnIndex(MyProviderContract.PRICE));
+//                StringBuffer sb2 = new StringBuffer(cursor.getString(cursor.getColumnIndex("distance")));
+                distance += cursor.getDouble(cursor.getColumnIndex(MyProviderContract.DISTANCE));
+//                distance += Double.parseDouble(sb2.delete(sb2.length()-2, sb2.length()).toString());
             } while(cursor.moveToNext());
         }
 
