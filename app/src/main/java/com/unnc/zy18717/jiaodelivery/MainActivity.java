@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
@@ -53,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
                         builder.setTitle("Enter price");
                         final EditText price = (EditText)new EditText(MainActivity.this);
-                        price.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                        price.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
                         price.setSingleLine(true);
+                        /*price.requestFocus();
+                        InputMethodManager inputManager = (InputMethodManager)price.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                        inputManager.showSoftInput(price, 0);*/
                         builder.setView(price);
                         builder.setNegativeButton("Cancel", null);
                         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(MainActivity.this, DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(dataAdapter);
         dataAdapter.update(cursor);
     }
@@ -120,6 +125,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void statistics (View view) {
         Intent intent = new Intent(this, StatisticsActivity.class);
+        startActivity(intent);
+    }
+
+    public void map(View view) {
+        Intent intent = new Intent(this, MapActivity.class);
         startActivity(intent);
     }
 

@@ -8,8 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
-import com.unnc.zy18717.jiaodelivery.MyProviderContract;
-import com.unnc.zy18717.jiaodelivery.DBHelper;
 
 public class MyProvider extends ContentProvider {
 

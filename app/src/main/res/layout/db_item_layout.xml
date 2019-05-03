@@ -4,13 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:descendantFocusability="blocksDescendants">
 
     <TextView
         android:id="@+id/value1"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:text="id"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/value2"
@@ -45,6 +46,7 @@
         android:id="@+id/value4"
         android:layout_width="40dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:text="dis"
         android:textAlignment="center"
         app:layout_constraintEnd_toStartOf="@+id/value5"
@@ -79,6 +81,7 @@
         android:id="@+id/setPrice"
         android:layout_width="160dp"
         android:layout_height="30dp"
+        android:layout_marginTop="8dp"
         android:text="set price"
         android:textSize="7sp"
         app:layout_constraintEnd_toStartOf="@+id/setStatus"
