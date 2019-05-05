@@ -1,9 +1,17 @@
 package com.unnc.zy18717.jiaodelivery;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,8 +26,12 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     RecyclerAdapter2 dataAdapter;
+    MyReceiver receiver;
     long startTime = 0;
     int index;
+    private NotificationCompat.Builder builder;
+    private NotificationManager notificationManager;
+    public static final String CHANNEL_ID = "com.unnc.zy18717.jiaodelivery";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         queryContentProvider(MyProviderContract.DISTANCE + " LIMIT 3");
+
+        sendBroadcast();
+
+        setNotification();
     }
 
     public void queryContentProvider(final String sortOrder) {
@@ -94,9 +110,9 @@ public class MainActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialogInterface, int which) {
                                         ContentValues contentValues = new ContentValues();
                                         contentValues.put(MyProviderContract.STATUS, status[index]);
-                                        cursor.moveToPosition(position);
+//                                            cursor.moveToPosition(position);
                                         final int d = cursor.getInt(cursor.getColumnIndex("_id"));
-                                        String[] selectionArgs = new String[] {String.valueOf(d)};
+                                        String[] selectionArgs = new String[]{String.valueOf(d)};
                                         getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
                                         queryContentProvider(MyProviderContract.DISTANCE + " LIMIT 3");
                                     }
@@ -133,14 +149,55 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void sendBroadcast() {
+        receiver = new MyReceiver();
+        IntentFilter itFilter = new IntentFilter();
+        itFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, itFilter);
+    }
+
+    private void setNotification() {
+        createNotificationChannel();
+
+        PendingIntent pi = PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0);
+        Resources r = getResources();
+
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Jiao Delivery")
+                .setContentText("Service on")
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pi)
+                .setAutoCancel(false);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(0, builder.build());
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "sequence Name";
+            String description = "description";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
     @Override
     public void onBackPressed() {
         long currentTime = System.currentTimeMillis();
-        if ((currentTime - startTime) >= 1500) {
+        if ((currentTime - startTime) >= 2000) {
             Toast.makeText(MainActivity.this, "Press again to exit", Toast.LENGTH_SHORT).show();
             startTime = currentTime;
         } else {
             finish();
+            unregisterReceiver(receiver);
         }
     }
 

@@ -83,32 +83,40 @@ public class AllItemsActivity extends AppCompatActivity implements RadioGroup.On
                         break;
                     case R.id.setStatus:
                         final String[] status = new String[] {"pending", "pickd-up", "delivered"};
-                        index = 0;
-                        AlertDialog alertDialog2 = new AlertDialog.Builder(AllItemsActivity.this)
-                        .setTitle("Choose status")
-                            .setIcon(R.mipmap.ic_launcher)
-                            .setSingleChoiceItems(status, 0, new DialogInterface.OnClickListener() {//添加单选框
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int which) {
-                                    index = which;
-                                }
-                            })
-                            .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {//添加"Yes"按钮
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int which) {
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(MyProviderContract.STATUS, status[index]);
-                                    cursor.moveToPosition(position);
-                                    final int d = cursor.getInt(cursor.getColumnIndex("_id"));
-                                    String[] selectionArgs = new String[] {String.valueOf(d)};
-                                    getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
-                                    queryContentProvider(radioFlag);
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .create();
-                        alertDialog2.show();
-                        break;
+                        cursor.moveToPosition(position);
+                        final String currentStatus = cursor.getString(cursor.getColumnIndex("status"));
+                        if (currentStatus.equals("delivered")) {
+                            Toast.makeText(AllItemsActivity.this, "Cannot change status!", Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        else {
+                            index = 0;
+                            AlertDialog alertDialog2 = new AlertDialog.Builder(AllItemsActivity.this)
+                                    .setTitle("Choose status")
+                                    .setIcon(R.mipmap.ic_launcher)
+                                    .setSingleChoiceItems(status, 0, new DialogInterface.OnClickListener() {//添加单选框
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int which) {
+                                            index = which;
+                                        }
+                                    })
+                                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int which) {
+                                            ContentValues contentValues = new ContentValues();
+                                            contentValues.put(MyProviderContract.STATUS, status[index]);
+                                            cursor.moveToPosition(position);
+                                            final int d = cursor.getInt(cursor.getColumnIndex("_id"));
+                                            String[] selectionArgs = new String[]{String.valueOf(d)};
+                                            getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                            queryContentProvider(radioFlag);
+                                        }
+                                    })
+                                    .setNegativeButton("Cancel", null)
+                                    .create();
+                            alertDialog2.show();
+                            break;
+                        }
                     default:
                         break;
                 }

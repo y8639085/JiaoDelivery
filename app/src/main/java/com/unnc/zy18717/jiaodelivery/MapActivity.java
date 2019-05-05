@@ -1,7 +1,10 @@
 package com.unnc.zy18717.jiaodelivery;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -9,14 +12,13 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -26,26 +28,46 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private LocationManager manager;
     private LocationListener listener;
-    private View.OnTouchListener onTouchListener;
+    private MapActivity.MyConnection conn;
+    private MapService.MyBinder myBinder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // create service
+        Intent intent = new Intent(this, MapService.class);
+        conn = new MapActivity.MyConnection();
+        // open service
+        startService(intent);
+        bindService(intent, conn, BIND_AUTO_CREATE);
+
         setContentView(R.layout.activity_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    private class MyConnection implements ServiceConnection {
+        @Override
+        public void onServiceConnected(ComponentName cn, IBinder binder) {
+            // get binder
+            myBinder = (MapService.MyBinder) binder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName cn) {
+            unbindService(conn);
+        }
     }
 
     @Override
@@ -66,29 +88,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        Location lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        LatLng lastKnown = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(lastKnown).title("Last Known Position"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(lastKnown));
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastKnown, 15.0f));
-
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                mMap.clear();
-                LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(current).title("Current Location"));
-
-                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
-
-                try {
-                    List<Address> listAddress = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                    if (listAddress != null && listAddress.size() > 0) {
-                        Log.i("placeInfo", listAddress.toString());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                if (myBinder != null)
+                    myBinder.onLocationChanged(location, mMap);
             }
 
             @Override
@@ -126,6 +130,30 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, listener);
+
+                Location lastLocation;
+                List<String> providers = manager.getProviders(true);
+                if (providers.contains(LocationManager.GPS_PROVIDER)) {
+                    lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    Log.e("jiao", "gps");
+                } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                    lastLocation = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    Log.e("jiao", "net");
+                } else if (providers.contains(LocationManager.PASSIVE_PROVIDER)) {
+                    lastLocation = manager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
+                    Log.e("jiao", "passive");
+                } else {
+                    Toast.makeText(this, "No available position provider", Toast.LENGTH_SHORT).show();
+                    Log.e("jiao", "wu");
+                    return;
+                }
+
+                if (lastLocation == null)
+                    Log.e("jiao", "nulllll");
+                LatLng lastKnown = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(lastKnown).title("Last Known Position"));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(lastKnown));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(lastKnown, 15.0f));
             }
         }
     }

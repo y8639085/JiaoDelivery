@@ -8,30 +8,26 @@
 
     <Button
         android:id="@+id/viewAll"
-        android:layout_width="180dp"
+        android:layout_width="105dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="10dp"
         android:onClick="viewAll"
         android:text="view all"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintEnd_toStartOf="@+id/statistics"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
 
     <Button
         android:id="@+id/statistics"
-        android:layout_width="180dp"
+        android:layout_width="105dp"
         android:layout_height="50dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
         android:onClick="statistics"
         android:text="statistics"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/viewAll" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/viewAll"
+        app:layout_constraintEnd_toStartOf="@+id/map"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/viewAll" />
 
     <TextView
         android:id="@+id/textView6"
@@ -130,14 +126,14 @@
 
     <Button
         android:id="@+id/map"
-        android:layout_width="38dp"
-        android:layout_height="31dp"
-        android:layout_marginTop="38dp"
-        android:layout_marginEnd="15dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:onClick="map"
-        android:text="Button"
-        app:layout_constraintEnd_toStartOf="@+id/viewAll"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerView" />
+        android:text="M"
+        app:layout_constraintBaseline_toBaselineOf="@+id/statistics"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/statistics" />
 
 </android.support.constraint.ConstraintLayout>
 
