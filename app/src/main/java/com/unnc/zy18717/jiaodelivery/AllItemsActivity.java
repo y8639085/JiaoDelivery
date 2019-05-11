@@ -9,12 +9,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.TimeZone;
 
 public class AllItemsActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
 
@@ -46,46 +48,49 @@ public class AllItemsActivity extends AppCompatActivity implements RadioGroup.On
 
         // put data into recyclerview
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        dataAdapter = new RecyclerAdapter2(this, cursor);
+        dataAdapter = new RecyclerAdapter2(this, cursor, 0);
         dataAdapter.setOnItemClickListener(new RecyclerAdapter2.OnItemClickListener() {
             @Override
             public void onItemClick(final View view, final int position) {
-                Log.e("Position", position + "");
                 switch (view.getId()) {
                     case R.id.setPrice:
-                        final AlertDialog.Builder builder = new AlertDialog.Builder(AllItemsActivity.this);
-                        builder.setTitle("Enter price");
-                        final EditText price = (EditText)new EditText(AllItemsActivity.this);
-                        price.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                        price.setSingleLine(true);
-                        builder.setView(price);
-                        builder.setNegativeButton("Cancel", null);
-                        builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                String price1 = price.getText().toString();
-                                if (price1.length() == 0) {
-                                    Toast.makeText(AllItemsActivity.this, "Invalid input", Toast.LENGTH_SHORT).show();
+                        cursor.moveToPosition(position);
+                        if (cursor.getString(cursor.getColumnIndex("status")).equals("delivered")) {
+                            Toast.makeText(AllItemsActivity.this, "Cannot change price!", Toast.LENGTH_SHORT).show();
+                            break;
+                        } else {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(AllItemsActivity.this);
+                            builder.setTitle("Enter price");
+                            final EditText price = (EditText) new EditText(AllItemsActivity.this);
+                            price.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                            price.setSingleLine(true);
+                            builder.setView(price);
+                            builder.setNegativeButton("Cancel", null);
+                            builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String price1 = price.getText().toString();
+                                    if (price1.length() == 0) {
+                                        Toast.makeText(AllItemsActivity.this, "Invalid input", Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        ContentValues contentValues = new ContentValues();
+                                        contentValues.put(MyProviderContract.PRICE, price1);
+
+                                        final int d = cursor.getInt(cursor.getColumnIndex("_id"));
+                                        String[] selectionArgs = new String[]{String.valueOf(d)};
+                                        getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                        queryContentProvider(sortOrder);
+                                    }
                                 }
-                                else {
-                                    ContentValues contentValues = new ContentValues();
-                                    contentValues.put(MyProviderContract.PRICE, price1);
-                                    cursor.moveToPosition(position);
-                                    final int d = cursor.getInt(cursor.getColumnIndex("_id"));
-                                    String[] selectionArgs = new String[] {String.valueOf(d)};
-                                    getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
-                                    queryContentProvider(sortOrder);
-                                }
-                            }
-                        });
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                        break;
+                            });
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            break;
+                        }
                     case R.id.setStatus:
                         final String[] status = new String[] {"pending", "pickd-up", "delivered"};
                         cursor.moveToPosition(position);
-                        final String currentStatus = cursor.getString(cursor.getColumnIndex("status"));
-                        if (currentStatus.equals("delivered")) {
+                        if (cursor.getString(cursor.getColumnIndex("status")).equals("delivered")) {
                             Toast.makeText(AllItemsActivity.this, "Cannot change status!", Toast.LENGTH_SHORT).show();
                             break;
                         }
@@ -100,15 +105,28 @@ public class AllItemsActivity extends AppCompatActivity implements RadioGroup.On
                                             index = which;
                                         }
                                     })
-                                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {//添加"Yes"按钮
+                                    .setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int which) {
                                             ContentValues contentValues = new ContentValues();
-                                            contentValues.put(MyProviderContract.STATUS, status[index]);
-                                            cursor.moveToPosition(position);
                                             final int d = cursor.getInt(cursor.getColumnIndex("_id"));
-                                            String[] selectionArgs = new String[]{String.valueOf(d)};
-                                            getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                            String[] selectionArgs;
+                                            if (status[index].equals("delivered")) {
+                                                Calendar cal = Calendar.getInstance();
+                                                cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+                                                String year = String.valueOf(cal.get(Calendar.YEAR));
+                                                String month = String.valueOf(cal.get(Calendar.MONTH)+1);
+                                                String day = String.valueOf(cal.get(Calendar.DATE));
+                                                String my_time = year + "/" + month + "/" + day;
+                                                selectionArgs = new String[]{String.valueOf(d)};
+                                                contentValues.put(MyProviderContract.STATUS, status[index]);
+                                                contentValues.put(MyProviderContract.FINISHTIME, my_time);
+                                                getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                            } else {
+                                                contentValues.put(MyProviderContract.STATUS, status[index]);
+                                                selectionArgs = new String[]{String.valueOf(d)};
+                                                getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                            }
                                             queryContentProvider(radioFlag);
                                         }
                                     })

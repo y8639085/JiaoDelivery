@@ -18,6 +18,7 @@ public class MyProviderContract {
     public static final String DISTANCE = "distance";
     public static final String PRICE = "price";
     public static final String STATUS = "status";
+    public static final String FINISHTIME = "finishTime";
 
     public static final String CONTENT_TYPE_SINGLE = "vnd.android.cursor.item/MyProvider.data.text";
     public static final String CONTENT_TYPE_MULTIPLE = "vnd.android.cursor.dir/MyProvider.data.text";

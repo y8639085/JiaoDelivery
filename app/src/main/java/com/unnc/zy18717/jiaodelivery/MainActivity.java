@@ -7,6 +7,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Build;
@@ -23,12 +24,16 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+import java.util.TimeZone;
+
 public class MainActivity extends AppCompatActivity {
 
     RecyclerAdapter2 dataAdapter;
     MyReceiver receiver;
     long startTime = 0;
     int index;
+    int orientation;
     private NotificationCompat.Builder builder;
     private NotificationManager notificationManager;
     public static final String CHANNEL_ID = "com.unnc.zy18717.jiaodelivery";
@@ -36,7 +41,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        // adaptation of portrait or landscape
+        orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT)
+            setContentView(R.layout.activity_main);
+        else if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+            setContentView(R.layout.activity_main_landscape);
 
         queryContentProvider(MyProviderContract.DISTANCE + " LIMIT 3");
 
@@ -61,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         final Cursor cursor = getContentResolver().query(MyProviderContract.DELIVERIES_URI, projection, "status!=?", selectionArgs, sortOrder);
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        dataAdapter = new RecyclerAdapter2(this, cursor);
+        dataAdapter = new RecyclerAdapter2(this, cursor, orientation);
         dataAdapter.setOnItemClickListener(new RecyclerAdapter2.OnItemClickListener() {
             @Override
             public void onItemClick(View view, final int position) {
@@ -72,9 +83,6 @@ public class MainActivity extends AppCompatActivity {
                         final EditText price = (EditText)new EditText(MainActivity.this);
                         price.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);
                         price.setSingleLine(true);
-                        /*price.requestFocus();
-                        InputMethodManager inputManager = (InputMethodManager)price.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputManager.showSoftInput(price, 0);*/
                         builder.setView(price);
                         builder.setNegativeButton("Cancel", null);
                         builder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
@@ -95,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.setStatus:
                         final String[] status = new String[] {"pending", "pickd-up", "delivered"};
+                        cursor.moveToPosition(position);
                         index = 0;
                         AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)
                                 .setTitle("Choose status")
@@ -109,11 +118,24 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int which) {
                                         ContentValues contentValues = new ContentValues();
-                                        contentValues.put(MyProviderContract.STATUS, status[index]);
-//                                            cursor.moveToPosition(position);
                                         final int d = cursor.getInt(cursor.getColumnIndex("_id"));
-                                        String[] selectionArgs = new String[]{String.valueOf(d)};
-                                        getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                        String[] selectionArgs;
+                                        if (status[index].equals("delivered")) {
+                                            Calendar cal = Calendar.getInstance();
+                                            cal.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+                                            String year = String.valueOf(cal.get(Calendar.YEAR));
+                                            String month = String.valueOf(cal.get(Calendar.MONTH)+1);
+                                            String day = String.valueOf(cal.get(Calendar.DATE));
+                                            String my_time = year + "/" + month + "/" + day;
+                                            selectionArgs = new String[]{String.valueOf(d)};
+                                            contentValues.put(MyProviderContract.STATUS, status[index]);
+                                            contentValues.put(MyProviderContract.FINISHTIME, my_time);
+                                            getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                        } else {
+                                            contentValues.put(MyProviderContract.STATUS, status[index]);
+                                            selectionArgs = new String[]{String.valueOf(d)};
+                                            getContentResolver().update(MyProviderContract.DELIVERIES_URI, contentValues, "_id=?", selectionArgs);
+                                        }
                                         queryContentProvider(MyProviderContract.DISTANCE + " LIMIT 3");
                                     }
                                 })
@@ -154,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter itFilter = new IntentFilter();
         itFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, itFilter);
+//        unregisterReceiver(receiver);
     }
 
     private void setNotification() {
@@ -196,8 +219,11 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Press again to exit", Toast.LENGTH_SHORT).show();
             startTime = currentTime;
         } else {
-            finish();
+
             unregisterReceiver(receiver);
+            finish();
+//            android.os.Process.killProcess(android.os.Process.myPid());
+//            System.exit(0);
         }
     }
 

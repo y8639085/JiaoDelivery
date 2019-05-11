@@ -133,12 +133,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                 Location lastLocation;
                 List<String> providers = manager.getProviders(true);
-                if (providers.contains(LocationManager.GPS_PROVIDER)) {
-                    lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    Log.e("jiao", "gps");
-                } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
                     lastLocation = manager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     Log.e("jiao", "net");
+                } else if (providers.contains(LocationManager.NETWORK_PROVIDER)) {
+                    lastLocation = manager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    Log.e("jiao", "gps");
                 } else if (providers.contains(LocationManager.PASSIVE_PROVIDER)) {
                     lastLocation = manager.getLastKnownLocation(LocationManager.PASSIVE_PROVIDER);
                     Log.e("jiao", "passive");

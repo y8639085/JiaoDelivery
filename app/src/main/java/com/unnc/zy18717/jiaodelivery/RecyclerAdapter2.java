@@ -1,6 +1,7 @@
 package com.unnc.zy18717.jiaodelivery;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,10 +14,12 @@ public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.MyHo
 
     Context context;
     Cursor cursor;
+    int orientation;
 
-    public RecyclerAdapter2 (Context context, Cursor cursor) {
+    public RecyclerAdapter2 (Context context, Cursor cursor, int orientation) {
         this.context = context;
         this.cursor = cursor;
+        this.orientation = orientation;
     }
 
     public void update (Cursor cursor) {
@@ -47,7 +50,10 @@ public class RecyclerAdapter2 extends RecyclerView.Adapter<RecyclerAdapter2.MyHo
 
     @Override
     public RecyclerAdapter2.MyHolder onCreateViewHolder (ViewGroup parent, int ViewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.db_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.db_item_layout, parent, false);;
+
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE)
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.db_item_landscape, parent, false);
         return new RecyclerAdapter2.MyHolder(view);
     }
 

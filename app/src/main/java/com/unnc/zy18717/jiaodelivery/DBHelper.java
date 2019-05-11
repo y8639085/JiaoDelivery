@@ -30,19 +30,20 @@ public class DBHelper extends SQLiteOpenHelper {
                 "des VARCHAR(128) NOT NULL," +
                 "distance DOUBLE NOT NULL," +
                 "price DOUBLE NOT NULL," +
-                "status VARCHAR(128) NOT NULL" +
+                "status VARCHAR(128) NOT NULL," +
+                "finishTime VARCHAR(128)" +
                 ");");
 
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('Connecticut', 'Delaware', '10', '1.0', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('California', 'Florida', '9', '1.2', 'delivered');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('California', 'Florida', '9', '1.2', 'delivered', '2019/5/6');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('Indiana', 'Illinois', '8', '1.3', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('New hampshise111111111', 'New York', '18', '1.3', 'delivered');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('New hampshise111111111', 'New York', '18', '1.3', 'delivered', '2019/5/3');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '16', '1.6', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '19', '4.3', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '22', '1.3', 'delivered');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('702-1', '705-1', '22', '1.3', 'delivered', '2019/5/2');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '23', '5.9', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '19', '7.4', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '7', '9.0', 'delivered');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('702-1', '705-1', '7', '9.0', 'delivered', '2019/5/2');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '2', '1.3', 'pending');");
     }
 
