@@ -88,7 +88,7 @@ public class AllItemsActivity extends AppCompatActivity implements RadioGroup.On
                             break;
                         }
                     case R.id.setStatus:
-                        final String[] status = new String[] {"pending", "pickd-up", "delivered"};
+                        final String[] status = new String[] {"pending", "picked-up", "delivered"};
                         cursor.moveToPosition(position);
                         if (cursor.getString(cursor.getColumnIndex("status")).equals("delivered")) {
                             Toast.makeText(AllItemsActivity.this, "Cannot change status!", Toast.LENGTH_SHORT).show();

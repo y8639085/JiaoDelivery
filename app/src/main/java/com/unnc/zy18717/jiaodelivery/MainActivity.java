@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                         alertDialog.show();
                         break;
                     case R.id.setStatus:
-                        final String[] status = new String[] {"pending", "pickd-up", "delivered"};
+                        final String[] status = new String[] {"pending", "picked-up", "delivered"};
                         cursor.moveToPosition(position);
                         index = 0;
                         AlertDialog alertDialog2 = new AlertDialog.Builder(MainActivity.this)

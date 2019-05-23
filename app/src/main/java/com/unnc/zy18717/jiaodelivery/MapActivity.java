@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -87,12 +88,17 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         }
 
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        final ArrayList<LatLng> points = new ArrayList<LatLng>();
+//        LatLng current = new LatLng(-34, 151);
+//        LatLng current1 = new LatLng(-34, 51);
+//        points.add(current);
+//        points.add(current1);
 
         listener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 if (myBinder != null)
-                    myBinder.onLocationChanged(location, mMap);
+                    myBinder.onLocationChanged(location, mMap, points);
             }
 
             @Override

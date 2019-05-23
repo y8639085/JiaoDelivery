@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('Connecticut', 'Delaware', '10', '1.0', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('California', 'Florida', '9', '1.2', 'delivered', '2019/5/6');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('Indiana', 'Illinois', '8', '1.3', 'pending');");
-        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('New hampshise111111111', 'New York', '18', '1.3', 'delivered', '2019/5/3');");
+        db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('New hampshise', 'New York', '18', '1.3', 'delivered', '2019/5/3');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '16', '1.6', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status) VALUES ('702-1', '705-1', '19', '4.3', 'pending');");
         db.execSQL("INSERT INTO deliveries (pickUp, des, distance, price, status, finishTime) VALUES ('702-1', '705-1', '22', '1.3', 'delivered', '2019/5/2');");
